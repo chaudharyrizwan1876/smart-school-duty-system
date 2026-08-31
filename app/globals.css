@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scrollbar-width: thin;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: var(--time-icon-filter, none);
+}
+.dark input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
