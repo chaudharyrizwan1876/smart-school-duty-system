@@ -1,7 +1,7 @@
 node_modules
 .next
-.env.local
 .wwebjs_auth
 .wwebjs_cache
 npm-debug.log*
 school-duty-system.rar
+config.bat
