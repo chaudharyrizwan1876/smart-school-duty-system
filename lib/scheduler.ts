@@ -4,6 +4,7 @@ import DutyAssignment from "@/models/DutyAssignment";
 import Teacher from "@/models/Teacher";
 import DutyType from "@/models/DutyType";
 import NotificationLog from "@/models/NotificationLog";
+import RecurringDuty from "@/models/RecurringDuty";
 import { sendWhatsAppMessage, getWhatsAppStatus } from "./whatsapp";
 
 const g = global as any;
@@ -77,8 +78,41 @@ async function fireNotification(assignmentId: string) {
   state.jobs.delete(String(assignment._id));
 }
 
+async function materializeRecurringDuties() {
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const todayDayOfWeek = startOfDay.getDay(); // 0 = Sunday ... 6 = Saturday
+
+  const rules = await RecurringDuty.find({ dayOfWeek: todayDayOfWeek, active: true });
+
+  for (const rule of rules) {
+    // Atomic upsert avoids a race where two concurrent calls both pass an
+    // exists-check and create duplicate assignments for the same rule/day.
+    const result = await DutyAssignment.findOneAndUpdate(
+      { date: startOfDay, recurringDuty: rule._id },
+      {
+        $setOnInsert: {
+          date: startOfDay,
+          dutyType: rule.dutyType,
+          teachers: rule.teachers,
+          recurringDuty: rule._id,
+        },
+      },
+      { upsert: true, new: false }
+    );
+    if (!result) {
+      console.log(`Auto-created today's assignment from recurring rule ${rule._id}`);
+    }
+  }
+}
+
 export async function scheduleTodaysDuties() {
   await connectDB();
+
+  await materializeRecurringDuties();
 
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);

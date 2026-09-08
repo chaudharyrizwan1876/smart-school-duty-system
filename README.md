@@ -21,7 +21,7 @@ Built on Next.js 14. No separate backend. No manual reminders. No missed duties.
 - [Why This Exists](#-why-this-exists)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
-- [Architecture](#️-architecture)
+- [Architecture](#-architecture)
 - [How the Smart Scheduler Works](#️-how-the-smart-scheduler-works)
 - [Recurring Duties](#-recurring-duties)
 - [Project Structure](#-project-structure)
