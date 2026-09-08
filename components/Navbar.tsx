@@ -10,6 +10,7 @@ const links = [
   { href: "/", label: "Dashboard" },
   { href: "/teachers", label: "Teachers" },
   { href: "/duty-types", label: "Duty Types" },
+  { href: "/recurring", label: "Recurring Duties" },
   { href: "/assign", label: "Assign Duties" },
   { href: "/schedule", label: "Schedule" },
   { href: "/logs", label: "Notifications Log" },
